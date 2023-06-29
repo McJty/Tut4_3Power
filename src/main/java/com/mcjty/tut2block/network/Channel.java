@@ -1,6 +1,6 @@
 package com.mcjty.tut2block.network;
 
-import com.mcjty.tut2block.Tutorial4Power;
+import com.mcjty.tut2block.TutorialPower;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
@@ -18,7 +18,7 @@ public class Channel {
 
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(Tutorial4Power.MODID, "tutorial"))
+                .named(new ResourceLocation(TutorialPower.MODID, "tutorial"))
                 .networkProtocolVersion(() -> "1.0")
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)

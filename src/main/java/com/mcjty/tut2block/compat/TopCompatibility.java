@@ -1,6 +1,6 @@
 package com.mcjty.tut2block.compat;
 
-import com.mcjty.tut2block.Tutorial4Power;
+import com.mcjty.tut2block.TutorialPower;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +30,7 @@ public class TopCompatibility {
         @Override
         public Void apply(ITheOneProbe theOneProbe) {
             probe = theOneProbe;
-            Tutorial4Power.LOGGER.info("Enabled support for The One Probe");
+            TutorialPower.LOGGER.info("Enabled support for The One Probe");
             probe.registerProvider(new IProbeInfoProvider() {
                 @Override
                 public ResourceLocation getID() {

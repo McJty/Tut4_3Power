@@ -1,6 +1,6 @@
 package com.mcjty.tut2block.datagen;
 
-import com.mcjty.tut2block.Tutorial4Power;
+import com.mcjty.tut2block.TutorialPower;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 public class TutItemTags extends ItemTagsProvider {
 
     public TutItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, BlockTagsProvider blockTags, ExistingFileHelper helper) {
-        super(packOutput, lookupProvider, blockTags.contentsGetter(), Tutorial4Power.MODID, helper);
+        super(packOutput, lookupProvider, blockTags.contentsGetter(), TutorialPower.MODID, helper);
     }
 
     @Override

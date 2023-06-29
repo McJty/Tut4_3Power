@@ -1,6 +1,8 @@
 package com.mcjty.tut2block.datagen;
 
-import com.mcjty.tut2block.Tutorial4Power;
+import com.mcjty.tut2block.Registration;
+import com.mcjty.tut2block.TutorialPower;
+import com.mcjty.tut2block.blocks.GeneratorBlockEntity;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -24,12 +26,13 @@ public class TutLootTables extends VanillaBlockLoot {
 
     @Override
     protected void generate() {
+        createStandardTable(Registration.GENERATOR_BLOCK.get(), Registration.GENERATOR_BLOCK_ENTITY.get(), GeneratorBlockEntity.ITEMS_TAG, GeneratorBlockEntity.ENERGY_TAG);
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
         return ForgeRegistries.BLOCKS.getEntries().stream()
-                .filter(e -> e.getKey().location().getNamespace().equals(Tutorial4Power.MODID))
+                .filter(e -> e.getKey().location().getNamespace().equals(TutorialPower.MODID))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }

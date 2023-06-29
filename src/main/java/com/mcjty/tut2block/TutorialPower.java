@@ -10,13 +10,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-@Mod(Tutorial4Power.MODID)
-public class Tutorial4Power {
+@Mod(TutorialPower.MODID)
+public class TutorialPower {
 
     public static final String MODID = "tut4power";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public Tutorial4Power() {
+    public TutorialPower() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         Registration.init(modEventBus);
 
