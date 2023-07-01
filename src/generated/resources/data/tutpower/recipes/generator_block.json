@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tutorial",
+  "key": {
+    "d": {
+      "tag": "minecraft:dirt"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "x": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "dsd",
+    "ixi",
+    "iii"
+  ],
+  "result": {
+    "item": "tutpower:generator_block"
+  },
+  "show_notification": true
+}
