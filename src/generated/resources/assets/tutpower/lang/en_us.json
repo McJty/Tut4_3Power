@@ -1,3 +1,4 @@
 {
-  "block.tutpower.generator_block": "Power Generator"
+  "block.tutpower.generator_block": "Power Generator",
+  "tutorial.screen.generator": "Generator"
 }
