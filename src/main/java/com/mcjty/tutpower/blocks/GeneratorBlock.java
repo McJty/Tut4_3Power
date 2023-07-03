@@ -1,6 +1,7 @@
 package com.mcjty.tutpower.blocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -83,8 +84,10 @@ public class GeneratorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction opposite = context.getNearestLookingDirection().getOpposite();
+        System.out.println("opposite = " + opposite);
         return this.defaultBlockState()
-                .setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite())
+                .setValue(BlockStateProperties.FACING, opposite)
                 .setValue(BlockStateProperties.POWERED, false);
     }
 

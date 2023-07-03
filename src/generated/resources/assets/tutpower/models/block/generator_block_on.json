@@ -5,7 +5,7 @@
     "east": "tutpower:block/machine_side",
     "north": "tutpower:block/machine_side",
     "south": "tutpower:block/machine_side",
-    "up": "tutpower:block/generator_block_on",
+    "up": "tutpower:block/generator_block",
     "west": "tutpower:block/machine_top"
   }
 }

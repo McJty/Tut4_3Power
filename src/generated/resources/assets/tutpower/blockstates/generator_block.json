@@ -1,7 +1,7 @@
 {
   "variants": {
     "facing=down,powered=false": {
-      "model": "tutpower:block/generator_block",
+      "model": "tutpower:block/generator_block_on",
       "x": 180
     },
     "facing=down,powered=true": {
@@ -9,7 +9,7 @@
       "x": 180
     },
     "facing=east,powered=false": {
-      "model": "tutpower:block/generator_block",
+      "model": "tutpower:block/generator_block_on",
       "x": 90,
       "y": 90
     },
@@ -19,7 +19,7 @@
       "y": 90
     },
     "facing=north,powered=false": {
-      "model": "tutpower:block/generator_block",
+      "model": "tutpower:block/generator_block_on",
       "x": 90
     },
     "facing=north,powered=true": {
@@ -27,7 +27,7 @@
       "x": 90
     },
     "facing=south,powered=false": {
-      "model": "tutpower:block/generator_block",
+      "model": "tutpower:block/generator_block_on",
       "x": 90,
       "y": 180
     },
@@ -37,13 +37,13 @@
       "y": 180
     },
     "facing=up,powered=false": {
-      "model": "tutpower:block/generator_block"
+      "model": "tutpower:block/generator_block_on"
     },
     "facing=up,powered=true": {
       "model": "tutpower:block/generator_block"
     },
     "facing=west,powered=false": {
-      "model": "tutpower:block/generator_block",
+      "model": "tutpower:block/generator_block_on",
       "x": 90,
       "y": 270
     },
