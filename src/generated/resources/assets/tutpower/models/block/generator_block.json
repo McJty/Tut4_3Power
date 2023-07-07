@@ -3,9 +3,9 @@
   "textures": {
     "down": "tutpower:block/machine_bottom",
     "east": "tutpower:block/machine_side",
-    "north": "tutpower:block/machine_side",
+    "north": "tutpower:block/generator_block_on",
     "south": "tutpower:block/machine_side",
-    "up": "tutpower:block/generator_block_on",
-    "west": "tutpower:block/machine_top"
+    "up": "tutpower:block/machine_top",
+    "west": "tutpower:block/machine_side"
   }
 }

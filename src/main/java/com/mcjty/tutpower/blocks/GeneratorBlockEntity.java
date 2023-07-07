@@ -28,6 +28,9 @@ public class GeneratorBlockEntity extends BlockEntity {
     public static final String ITEMS_TAG = "Inventory";
     public static final String ENERGY_TAG = "Energy";
 
+    public static final int MAXTRANSFER = 1000;
+    public static final int CAPACITY = 100000;
+
     public static int SLOT_COUNT = 1;
     public static int SLOT = 0;
 
@@ -111,7 +114,7 @@ public class GeneratorBlockEntity extends BlockEntity {
             if (be != null) {
                 be.getCapability(ForgeCapabilities.ENERGY).map(e -> {
                     if (e.canReceive()) {
-                        int received = e.receiveEnergy(Math.min(energy.getEnergyStored(), 1000), false);
+                        int received = e.receiveEnergy(Math.min(energy.getEnergyStored(), MAXTRANSFER), false);
                         energy.extractEnergy(received, false);
                         setChanged();
                         return received;
@@ -124,6 +127,10 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public ItemStackHandler getItems() {
         return items;
+    }
+
+    public int getStoredPower() {
+        return energy.getEnergyStored();
     }
 
     @Override
@@ -140,7 +147,7 @@ public class GeneratorBlockEntity extends BlockEntity {
             items.deserializeNBT(tag.getCompound(ITEMS_TAG));
         }
         if (tag.contains(ENERGY_TAG)) {
-            energy.deserializeNBT(tag.getCompound(ENERGY_TAG));
+            energy.deserializeNBT(tag.get(ENERGY_TAG));
         }
     }
 
@@ -156,7 +163,7 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     @Nonnull
     private EnergyStorage createEnergyStorage() {
-        return new EnergyStorage(100000, 1000, 1000);
+        return new EnergyStorage(CAPACITY, MAXTRANSFER, MAXTRANSFER);
     }
 
     @NotNull

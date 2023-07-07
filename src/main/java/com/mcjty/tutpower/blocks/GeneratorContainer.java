@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -17,14 +18,41 @@ import static com.mcjty.tutpower.blocks.GeneratorBlockEntity.SLOT_COUNT;
 public class GeneratorContainer extends AbstractContainerMenu {
 
     private final BlockPos pos;
+    private int power;
 
     public GeneratorContainer(int windowId, Player player, BlockPos pos) {
         super(Registration.GENERATOR_CONTAINER.get(), windowId);
         this.pos = pos;
         if (player.level().getBlockEntity(pos) instanceof GeneratorBlockEntity generator) {
             addSlot(new SlotItemHandler(generator.getItems(), SLOT, 64, 24));
+            addDataSlot(new DataSlot() {
+                @Override
+                public int get() {
+                    return generator.getStoredPower() & 0xffff;
+                }
+
+                @Override
+                public void set(int pValue) {
+                    GeneratorContainer.this.power |= pValue & 0xffff;
+                }
+            });
+            addDataSlot(new DataSlot() {
+                @Override
+                public int get() {
+                    return (generator.getStoredPower() >> 16) & 0xffff;
+                }
+
+                @Override
+                public void set(int pValue) {
+                    GeneratorContainer.this.power |= (pValue & 0xffff) << 16;
+                }
+            });
         }
         layoutPlayerInventorySlots(player.getInventory(), 10, 70);
+    }
+
+    public int getPower() {
+        return power;
     }
 
     private int addSlotRange(Container playerInventory, int index, int x, int y, int amount, int dx) {
