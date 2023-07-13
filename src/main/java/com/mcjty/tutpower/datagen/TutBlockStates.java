@@ -28,8 +28,8 @@ public class TutBlockStates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        BlockModelBuilder modelOn = models().cube(Registration.GENERATOR_BLOCK.getId().getPath(), BOTTOM, TOP, modLoc("block/generator_block_on"), SIDE, SIDE, SIDE);
-        BlockModelBuilder modelOff = models().cube(Registration.GENERATOR_BLOCK.getId().getPath()+"_on", BOTTOM, TOP, modLoc("block/generator_block"), SIDE, SIDE, SIDE);
+        BlockModelBuilder modelOn = models().cube(Registration.GENERATOR_BLOCK.getId().getPath(), BOTTOM, TOP, modLoc("block/generator_block_on"), SIDE, SIDE, SIDE).texture("particle", SIDE);
+        BlockModelBuilder modelOff = models().cube(Registration.GENERATOR_BLOCK.getId().getPath()+"_on", BOTTOM, TOP, modLoc("block/generator_block"), SIDE, SIDE, SIDE).texture("particle", SIDE);
         directionBlock(Registration.GENERATOR_BLOCK.get(), (state, builder) -> {
             if (state.getValue(BlockStateProperties.POWERED)) {
                 builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff);

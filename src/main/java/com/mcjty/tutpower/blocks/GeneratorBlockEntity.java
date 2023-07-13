@@ -90,6 +90,7 @@ public class GeneratorBlockEntity extends BlockEntity {
                 setBurnTime(burnTime-1);
                 energy.receiveEnergy(50, false);
             }
+            setChanged();
         }
     }
 

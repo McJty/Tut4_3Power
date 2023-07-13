@@ -33,7 +33,7 @@ public class GeneratorContainer extends AbstractContainerMenu {
 
                 @Override
                 public void set(int pValue) {
-                    GeneratorContainer.this.power |= pValue & 0xffff;
+                    GeneratorContainer.this.power = (GeneratorContainer.this.power & 0xffff0000) | (pValue & 0xffff);
                 }
             });
             addDataSlot(new DataSlot() {
@@ -44,7 +44,7 @@ public class GeneratorContainer extends AbstractContainerMenu {
 
                 @Override
                 public void set(int pValue) {
-                    GeneratorContainer.this.power |= (pValue & 0xffff) << 16;
+                    GeneratorContainer.this.power = (GeneratorContainer.this.power & 0xffff) | ((pValue & 0xffff) << 16);
                 }
             });
         }
