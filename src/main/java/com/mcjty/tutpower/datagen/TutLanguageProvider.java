@@ -15,6 +15,7 @@ public class TutLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(Registration.GENERATOR_BLOCK.get(), "Power Generator");
+        add(Registration.CHARGER_BLOCK.get(), "Charger");
         add(GeneratorBlock.SCREEN_TUTORIAL_GENERATOR, "Generator");
     }
 }

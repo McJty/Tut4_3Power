@@ -28,6 +28,7 @@ public class GeneratorBlockEntity extends BlockEntity {
     public static final String ITEMS_TAG = "Inventory";
     public static final String ENERGY_TAG = "Energy";
 
+    public static final int GENERATE = 50;
     public static final int MAXTRANSFER = 1000;
     public static final int CAPACITY = 100000;
 
@@ -88,7 +89,7 @@ public class GeneratorBlockEntity extends BlockEntity {
                 items.extractItem(SLOT, 1, false);
             } else {
                 setBurnTime(burnTime-1);
-                energy.receiveEnergy(50, false);
+                energy.receiveEnergy(GENERATE, false);
             }
             setChanged();
         }

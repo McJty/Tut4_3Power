@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "tutpower:block/charger_block_off"
+    },
+    "powered=true": {
+      "model": "tutpower:block/charger_block_on"
+    }
+  }
+}

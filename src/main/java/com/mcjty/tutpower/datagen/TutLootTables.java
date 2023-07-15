@@ -2,6 +2,7 @@ package com.mcjty.tutpower.datagen;
 
 import com.mcjty.tutpower.Registration;
 import com.mcjty.tutpower.TutorialPower;
+import com.mcjty.tutpower.blocks.ChargerBlockEntity;
 import com.mcjty.tutpower.blocks.GeneratorBlockEntity;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class TutLootTables extends VanillaBlockLoot {
     @Override
     protected void generate() {
         createStandardTable(Registration.GENERATOR_BLOCK.get(), Registration.GENERATOR_BLOCK_ENTITY.get(), GeneratorBlockEntity.ITEMS_TAG, GeneratorBlockEntity.ENERGY_TAG);
+        createStandardTable(Registration.CHARGER_BLOCK.get(), Registration.CHARGER_BLOCK_ENTITY.get(), ChargerBlockEntity.ENERGY_TAG);
     }
 
     @Override

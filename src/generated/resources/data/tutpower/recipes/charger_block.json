@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tutorial",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "x": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "ixi",
+    "iii"
+  ],
+  "result": {
+    "item": "tutpower:charger_block"
+  },
+  "show_notification": true
+}
