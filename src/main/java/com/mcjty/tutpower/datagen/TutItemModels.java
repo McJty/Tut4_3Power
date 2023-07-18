@@ -14,7 +14,7 @@ public class TutItemModels extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        withExistingParent(Registration.GENERATOR_BLOCK.getId().getPath(), modLoc("block/generator_block_on"));
+        withExistingParent(Registration.GENERATOR_BLOCK.getId().getPath(), modLoc("block/generator_block_off"));
         withExistingParent(Registration.CHARGER_BLOCK.getId().getPath(), modLoc("block/charger_block_on"));
     }
 }

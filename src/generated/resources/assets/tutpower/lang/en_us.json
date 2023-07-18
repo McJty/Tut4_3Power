@@ -1,5 +1,6 @@
 {
   "block.tutpower.charger_block": "Charger",
   "block.tutpower.generator_block": "Power Generator",
+  "tab.tutpower": "Tutorial Power",
   "tutorial.screen.generator": "Generator"
 }

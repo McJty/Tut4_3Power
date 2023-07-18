@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -21,8 +22,7 @@ public class ChargerBlockEntity extends BlockEntity {
 
     public static final String ENERGY_TAG = "Energy";
 
-    public static final int USAGE = 10;
-    public static final int MAXTRANSFER = 1000;
+    public static final int MAXTRANSFER = 100;
     public static final int CAPACITY = 10000;
 
     private final EnergyStorage energy = createEnergyStorage();
@@ -43,17 +43,15 @@ public class ChargerBlockEntity extends BlockEntity {
         }
     });
 
-    private int burnTime;
-
     public ChargerBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CHARGER_BLOCK_ENTITY.get(), pos, state);
     }
 
     public void tickServer() {
-    }
-
-    public int getStoredPower() {
-        return energy.getEnergyStored();
+        boolean powered = energy.getEnergyStored() > 0;
+        if (powered != getBlockState().getValue(BlockStateProperties.POWERED)) {
+            level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlockStateProperties.POWERED, powered));
+        }
     }
 
     @Override

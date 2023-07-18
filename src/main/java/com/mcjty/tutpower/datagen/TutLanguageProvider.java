@@ -17,5 +17,6 @@ public class TutLanguageProvider extends LanguageProvider {
         add(Registration.GENERATOR_BLOCK.get(), "Power Generator");
         add(Registration.CHARGER_BLOCK.get(), "Charger");
         add(GeneratorBlock.SCREEN_TUTORIAL_GENERATOR, "Generator");
+        add("tab.tutpower", "Tutorial Power");
     }
 }

@@ -33,8 +33,8 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<ChargerBlockEntity>> CHARGER_BLOCK_ENTITY = BLOCK_ENTITIES.register("charger_block",
             () -> BlockEntityType.Builder.of(ChargerBlockEntity::new, CHARGER_BLOCK.get()).build(null));
 
-    public static RegistryObject<CreativeModeTab> TAB_PROBE = TABS.register("tutpower", () -> CreativeModeTab.builder()
-            .title(Component.literal("Power Tutorial"))
+    public static RegistryObject<CreativeModeTab> TAB = TABS.register("tutpower", () -> CreativeModeTab.builder()
+            .title(Component.translatable("tab.tutpower"))
             .icon(() -> new ItemStack(GENERATOR_BLOCK.get()))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .displayItems((featureFlags, output) -> {
