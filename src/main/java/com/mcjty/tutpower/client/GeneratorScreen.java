@@ -11,6 +11,11 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class GeneratorScreen extends AbstractContainerScreen<GeneratorContainer> {
 
+    private static final int ENERGY_LEFT = 96;
+    private static final int ENERGY_WIDTH = 72;
+    private static final int ENERGY_TOP = 8;
+    private static final int ENERGY_HEIGHT = 8;
+
     private final ResourceLocation GUI = new ResourceLocation(TutorialPower.MODID, "textures/gui/generator.png");
 
     public GeneratorScreen(GeneratorContainer container, Inventory inventory, Component title) {
@@ -22,24 +27,16 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorContainer>
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.blit(GUI, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
         int power = menu.getPower();
-        int energyLeft = 96;
-        int energyWidth = 72;
-        int energyTop = 8;
-        int energyHeight = 8;
-        int p = (int) ((power / (float) GeneratorBlockEntity.CAPACITY) * energyWidth);
-        graphics.fillGradient(leftPos + energyLeft, topPos + energyTop, leftPos + energyLeft + p, topPos + energyTop + energyHeight, 0xffff0000, 0xff000000);
-        graphics.fill(leftPos + energyLeft + p, topPos + energyTop, leftPos + energyLeft + energyWidth, topPos + energyTop + energyHeight, 0xff330000);
+        int p = (int) ((power / (float) GeneratorBlockEntity.CAPACITY) * ENERGY_WIDTH);
+        graphics.fillGradient(leftPos + ENERGY_LEFT, topPos + ENERGY_TOP, leftPos + ENERGY_LEFT + p, topPos + ENERGY_TOP + ENERGY_HEIGHT, 0xffff0000, 0xff000000);
+        graphics.fill(leftPos + ENERGY_LEFT + p, topPos + ENERGY_TOP, leftPos + ENERGY_LEFT + ENERGY_WIDTH, topPos + ENERGY_TOP + ENERGY_HEIGHT, 0xff330000);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mousex, int mousey, float partialTick) {
         super.render(graphics, mousex, mousey, partialTick);
-        int energyLeft = 96;
-        int energyWidth = 72;
-        int energyTop = 8;
-        int energyHeight = 8;
         // Render tooltip with power if in the energy box
-        if (mousex >= leftPos + energyLeft && mousex < leftPos + energyLeft + energyWidth && mousey >= topPos + energyTop && mousey < topPos + energyTop + energyHeight) {
+        if (mousex >= leftPos + ENERGY_LEFT && mousex < leftPos + ENERGY_LEFT + ENERGY_WIDTH && mousey >= topPos + ENERGY_TOP && mousey < topPos + ENERGY_TOP + ENERGY_HEIGHT) {
             int power = menu.getPower();
             graphics.renderTooltip(this.font, Component.literal(power + " RF"), mousex, mousey);
         }
