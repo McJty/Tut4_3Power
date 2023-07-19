@@ -33,6 +33,12 @@ public class ChargerBlockEntity extends BlockEntity {
         }
 
         @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            setChanged();
+            return super.receiveEnergy(maxReceive, simulate);
+        }
+
+        @Override
         public boolean canExtract() {
             return false;
         }
