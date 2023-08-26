@@ -3,6 +3,7 @@ package com.mcjty.tutpower.cables.client;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mcjty.tutpower.TutorialPower;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -18,6 +19,8 @@ import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import java.util.function.Function;
 
 public class CableModelLoader implements IGeometryLoader<CableModelLoader.CableModelGeometry> {
+
+    public static final ResourceLocation GENERATOR_LOADER = new ResourceLocation(TutorialPower.MODID, "cableloader");
 
     public static void register(ModelEvent.RegisterGeometryLoaders event) {
         event.register("cableloader", new CableModelLoader());

@@ -2,16 +2,14 @@ package com.mcjty.tutpower.datagen;
 
 import com.mcjty.tutpower.Registration;
 import com.mcjty.tutpower.TutorialPower;
+import com.mcjty.tutpower.cables.client.CableModelLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.BiConsumer;
@@ -30,8 +28,16 @@ public class TutBlockStates extends BlockStateProvider {
     protected void registerStatesAndModels() {
         registerGenerator();
         registerCharger();
+        registerCable();
     }
 
+    private void registerCable() {
+        BlockModelBuilder model = models().getBuilder("cable")
+                .parent(models().getExistingFile(mcLoc("cube")))
+                .customLoader((builder, helper) -> new CustomLoaderBuilder<BlockModelBuilder>(CableModelLoader.GENERATOR_LOADER, builder, helper) { })
+                .end();
+        simpleBlock(Registration.CABLE_BLOCK.get(), model);
+    }
     private void registerCharger() {
         BlockModelBuilder modelOn = models().slab(Registration.CHARGER_BLOCK.getId().getPath()+"_on", SIDE, BOTTOM, modLoc("block/charger_block_on")).texture("particle", SIDE);
         BlockModelBuilder modelOff = models().slab(Registration.CHARGER_BLOCK.getId().getPath()+"_off", SIDE, BOTTOM, modLoc("block/charger_block")).texture("particle", SIDE);

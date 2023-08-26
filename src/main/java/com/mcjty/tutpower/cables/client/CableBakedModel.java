@@ -140,6 +140,9 @@ public class CableBakedModel implements IDynamicBakedModel {
     @NotNull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType layer) {
         List<BakedQuad> quads = new ArrayList<>();
+        if (state == null) {
+            return quads;
+        }
 
         if (side == null && (layer == null || layer.equals(RenderType.solid()))) {
             // Called with the blockstate from our block. Here we get the values of the six properties and pass that to

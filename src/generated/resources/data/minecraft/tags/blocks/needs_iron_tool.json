@@ -1,6 +1,7 @@
 {
   "values": [
     "tutpower:generator_block",
-    "tutpower:charger_block"
+    "tutpower:charger_block",
+    "tutpower:cable"
   ]
 }
