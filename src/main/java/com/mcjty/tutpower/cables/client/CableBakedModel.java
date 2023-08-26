@@ -1,37 +1,37 @@
 package com.mcjty.tutpower.cables.client;
 
-import com.google.common.base.Function;
 import com.mcjty.tutpower.TutorialPower;
 import com.mcjty.tutpower.cables.ConnectorType;
 import com.mcjty.tutpower.cables.blocks.CableBlock;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mcjty.tutpower.cables.client.CablePatterns.Pattern;
+import com.mcjty.tutpower.cables.client.CablePatterns.QuadSetting;
+import com.mcjty.tutpower.tools.BakedModelHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-import static com.mcjty.tutpower.cables.ConnectorType.BLOCK;
-import static com.mcjty.tutpower.cables.ConnectorType.CABLE;
+import static com.mcjty.tutpower.cables.ConnectorType.*;
 import static com.mcjty.tutpower.cables.client.CablePatterns.SpriteIdx.*;
+import static com.mcjty.tutpower.tools.BakedModelHelper.quad;
+import static com.mcjty.tutpower.tools.BakedModelHelper.v;
 
 public class CableBakedModel implements IDynamicBakedModel {
 
@@ -45,22 +45,22 @@ public class CableBakedModel implements IDynamicBakedModel {
     private TextureAtlasSprite spriteSide;
 
     static {
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, false, false, false), new CablePatterns.QuadSetting(SPRITE_NONE, 0));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, false, false, false), new CablePatterns.QuadSetting(SPRITE_END, 3));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, true, false, false), new CablePatterns.QuadSetting(SPRITE_END, 0));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, false, true, false), new CablePatterns.QuadSetting(SPRITE_END, 1));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, false, false, true), new CablePatterns.QuadSetting(SPRITE_END, 2));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, true, false, false), new CablePatterns.QuadSetting(SPRITE_CORNER, 0));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, true, true, false), new CablePatterns.QuadSetting(SPRITE_CORNER, 1));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, false, true, true), new CablePatterns.QuadSetting(SPRITE_CORNER, 2));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, false, false, true), new CablePatterns.QuadSetting(SPRITE_CORNER, 3));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, true, false, true), new CablePatterns.QuadSetting(SPRITE_STRAIGHT, 0));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, false, true, false), new CablePatterns.QuadSetting(SPRITE_STRAIGHT, 1));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, true, true, false), new CablePatterns.QuadSetting(SPRITE_THREE, 0));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(false, true, true, true), new CablePatterns.QuadSetting(SPRITE_THREE, 1));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, false, true, true), new CablePatterns.QuadSetting(SPRITE_THREE, 2));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, true, false, true), new CablePatterns.QuadSetting(SPRITE_THREE, 3));
-        CablePatterns.PATTERNS.put(new CablePatterns.Pattern(true, true, true, true), new CablePatterns.QuadSetting(SPRITE_CROSS, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(false, false, false, false), QuadSetting.of(SPRITE_NONE, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(true, false, false, false), QuadSetting.of(SPRITE_END, 3));
+        CablePatterns.PATTERNS.put(Pattern.of(false, true, false, false), QuadSetting.of(SPRITE_END, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(false, false, true, false), QuadSetting.of(SPRITE_END, 1));
+        CablePatterns.PATTERNS.put(Pattern.of(false, false, false, true), QuadSetting.of(SPRITE_END, 2));
+        CablePatterns.PATTERNS.put(Pattern.of(true, true, false, false), QuadSetting.of(SPRITE_CORNER, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(false, true, true, false), QuadSetting.of(SPRITE_CORNER, 1));
+        CablePatterns.PATTERNS.put(Pattern.of(false, false, true, true), QuadSetting.of(SPRITE_CORNER, 2));
+        CablePatterns.PATTERNS.put(Pattern.of(true, false, false, true), QuadSetting.of(SPRITE_CORNER, 3));
+        CablePatterns.PATTERNS.put(Pattern.of(false, true, false, true), QuadSetting.of(SPRITE_STRAIGHT, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(true, false, true, false), QuadSetting.of(SPRITE_STRAIGHT, 1));
+        CablePatterns.PATTERNS.put(Pattern.of(true, true, true, false), QuadSetting.of(SPRITE_THREE, 0));
+        CablePatterns.PATTERNS.put(Pattern.of(false, true, true, true), QuadSetting.of(SPRITE_THREE, 1));
+        CablePatterns.PATTERNS.put(Pattern.of(true, false, true, true), QuadSetting.of(SPRITE_THREE, 2));
+        CablePatterns.PATTERNS.put(Pattern.of(true, true, false, true), QuadSetting.of(SPRITE_THREE, 3));
+        CablePatterns.PATTERNS.put(Pattern.of(true, true, true, true), QuadSetting.of(SPRITE_CROSS, 0));
     }
 
     private void initTextures() {
@@ -78,8 +78,7 @@ public class CableBakedModel implements IDynamicBakedModel {
     }
 
     public TextureAtlasSprite getTexture(ResourceLocation resource) {
-        //noinspection deprecation
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(resource);
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(resource);
     }
 
     private TextureAtlasSprite getSpriteNormal(CablePatterns.SpriteIdx idx) {
@@ -94,43 +93,6 @@ public class CableBakedModel implements IDynamicBakedModel {
         };
     }
 
-    private static BakedQuad quad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite, int rotation) {
-        return switch (rotation) {
-            case 0 -> quad(v1, v2, v3, v4, sprite);
-            case 1 -> quad(v2, v3, v4, v1, sprite);
-            case 2 -> quad(v3, v4, v1, v2, sprite);
-            case 3 -> quad(v4, v1, v2, v3, sprite);
-            default -> quad(v1, v2, v3, v4, sprite);
-        };
-    }
-
-    private static BakedQuad quad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite) {
-        Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
-
-        BakedQuad[] quad = new BakedQuad[1];
-        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(q -> quad[0] = q);
-        builder.setSprite(sprite);
-        builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
-        putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite);
-        return quad[0];
-    }
-
-    public static void putVertex(VertexConsumer builder, Position normal,
-                                 double x, double y, double z, float u, float v,
-                                 TextureAtlasSprite sprite) {
-        float iu = sprite.getU(u);
-        float iv = sprite.getV(v);
-        builder.vertex(x, y, z)
-                .uv(iu, iv)
-                .uv2(0, 0)
-                .color(1.0f, 1.0f, 1.0f, 1.0f)
-                .normal((float) normal.x(), (float) normal.y(), (float) normal.z())
-                .endVertex();
-    }
-
     @Override
     public boolean usesBlockLight() {
         return false;
@@ -140,23 +102,24 @@ public class CableBakedModel implements IDynamicBakedModel {
     @NotNull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType layer) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (state == null) {
-            return quads;
-        }
 
         if (side == null && (layer == null || layer.equals(RenderType.solid()))) {
             // Called with the blockstate from our block. Here we get the values of the six properties and pass that to
             // our baked model implementation.
-            ConnectorType north = state.getValue(CableBlock.NORTH);
-            ConnectorType south = state.getValue(CableBlock.SOUTH);
-            ConnectorType west = state.getValue(CableBlock.WEST);
-            ConnectorType east = state.getValue(CableBlock.EAST);
-            ConnectorType up = state.getValue(CableBlock.UP);
-            ConnectorType down = state.getValue(CableBlock.DOWN);
+            ConnectorType north, south, west, east, up, down;
+            if (state != null) {
+                north = state.getValue(CableBlock.NORTH);
+                south = state.getValue(CableBlock.SOUTH);
+                west = state.getValue(CableBlock.WEST);
+                east = state.getValue(CableBlock.EAST);
+                up = state.getValue(CableBlock.UP);
+                down = state.getValue(CableBlock.DOWN);
+            } else {
+                north = south = west = east = up = down = NONE;
+            }
 
             initTextures();
             TextureAtlasSprite spriteCable = spriteNormalCable;
-            CableBlock block = (CableBlock) state.getBlock();
             Function<CablePatterns.SpriteIdx, TextureAtlasSprite> spriteGetter = this::getSpriteNormal;
 
             double o = .4;      // Thickness of the cable. .0 would be full block, .5 is infinitely thin.
@@ -185,7 +148,7 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(q, 1 - p, q), v(1 - q, 1 - p, q), v(1 - q, 1 - p, 1 - q), v(q, 1 - p, 1 - q), spriteConnector));
                 quads.add(quad(v(q, 1, q), v(q, 1, 1 - q), v(1 - q, 1, 1 - q), v(1 - q, 1, q), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(west, south, east, north);
+                QuadSetting pattern = CablePatterns.findPattern(west, south, east, north);
                 quads.add(quad(v(o, 1 - o, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - o, o), v(o, 1 - o, o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
 
@@ -208,7 +171,7 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(q, p, 1 - q), v(1 - q, p, 1 - q), v(1 - q, p, q), v(q, p, q), spriteConnector));
                 quads.add(quad(v(q, 0, 1 - q), v(q, 0, q), v(1 - q, 0, q), v(1 - q, 0, 1 - q), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(west, north, east, south);
+                QuadSetting pattern = CablePatterns.findPattern(west, north, east, south);
                 quads.add(quad(v(o, o, o), v(1 - o, o, o), v(1 - o, o, 1 - o), v(o, o, 1 - o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
 
@@ -231,7 +194,7 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(1 - p, q, 1 - q), v(1 - p, 1 - q, 1 - q), v(1 - p, 1 - q, q), v(1 - p, q, q), spriteConnector));
                 quads.add(quad(v(1, q, 1 - q), v(1, q, q), v(1, 1 - q, q), v(1, 1 - q, 1 - q), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(down, north, up, south);
+                QuadSetting pattern = CablePatterns.findPattern(down, north, up, south);
                 quads.add(quad(v(1 - o, o, o), v(1 - o, 1 - o, o), v(1 - o, 1 - o, 1 - o), v(1 - o, o, 1 - o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
 
@@ -254,7 +217,7 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(p, q, q), v(p, 1 - q, q), v(p, 1 - q, 1 - q), v(p, q, 1 - q), spriteConnector));
                 quads.add(quad(v(0, q, q), v(0, q, 1 - q), v(0, 1 - q, 1 - q), v(0, 1 - q, q), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(down, south, up, north);
+                QuadSetting pattern = CablePatterns.findPattern(down, south, up, north);
                 quads.add(quad(v(o, o, 1 - o), v(o, 1 - o, 1 - o), v(o, 1 - o, o), v(o, o, o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
 
@@ -277,7 +240,7 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(q, q, p), v(1 - q, q, p), v(1 - q, 1 - q, p), v(q, 1 - q, p), spriteConnector));
                 quads.add(quad(v(q, q, 0), v(q, 1 - q, 0), v(1 - q, 1 - q, 0), v(1 - q, q, 0), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(west, up, east, down);
+                QuadSetting pattern = CablePatterns.findPattern(west, up, east, down);
                 quads.add(quad(v(o, 1 - o, o), v(1 - o, 1 - o, o), v(1 - o, o, o), v(o, o, o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
 
@@ -300,16 +263,12 @@ public class CableBakedModel implements IDynamicBakedModel {
                 quads.add(quad(v(q, 1 - q, 1 - p), v(1 - q, 1 - q, 1 - p), v(1 - q, q, 1 - p), v(q, q, 1 - p), spriteConnector));
                 quads.add(quad(v(q, 1 - q, 1), v(q, q, 1), v(1 - q, q, 1), v(1 - q, 1 - q, 1), spriteSide));
             } else {
-                CablePatterns.QuadSetting pattern = CablePatterns.findPattern(west, down, east, up);
+                QuadSetting pattern = CablePatterns.findPattern(west, down, east, up);
                 quads.add(quad(v(o, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, 1 - o, 1 - o), v(o, 1 - o, 1 - o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
             }
         }
 
         return quads;
-    }
-
-    protected static Vec3 v(double x, double y, double z) {
-        return new Vec3(x, y, z);
     }
 
     @Override
