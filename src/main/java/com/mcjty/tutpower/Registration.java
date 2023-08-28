@@ -2,6 +2,7 @@ package com.mcjty.tutpower;
 
 import com.mcjty.tutpower.blocks.*;
 import com.mcjty.tutpower.cables.blocks.CableBlock;
+import com.mcjty.tutpower.cables.blocks.CableBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
@@ -36,6 +37,8 @@ public class Registration {
 
     public static final RegistryObject<CableBlock> CABLE_BLOCK = BLOCKS.register("cable", CableBlock::new);
     public static final RegistryObject<Item> CABLE_BLOCK_ITEM = ITEMS.register("cable", () -> new BlockItem(CABLE_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<CableBlockEntity>> CABLE_BLOCK_ENTITY = BLOCK_ENTITIES.register("cable",
+            () -> BlockEntityType.Builder.of(CableBlockEntity::new, CABLE_BLOCK.get()).build(null));
 
     public static RegistryObject<CreativeModeTab> TAB = TABS.register("tutpower", () -> CreativeModeTab.builder()
             .title(Component.translatable("tab.tutpower"))

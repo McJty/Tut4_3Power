@@ -65,20 +65,19 @@ public class CableBakedModel implements IDynamicBakedModel {
 
     private void initTextures() {
         if (spriteConnector == null) {
-            spriteConnector = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/connector"));
-            spriteNormalCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/normal"));
-            spriteNoneCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/none"));
-            spriteEndCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/end"));
-            spriteCornerCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/corner"));
-            spriteThreeCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/three"));
-            spriteCrossCable = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/cross"));
-
-            spriteSide = getTexture(new ResourceLocation(TutorialPower.MODID, "block/cable/side"));
+            spriteConnector = getTexture("block/cable/connector");
+            spriteNormalCable = getTexture("block/cable/normal");
+            spriteNoneCable = getTexture("block/cable/none");
+            spriteEndCable = getTexture("block/cable/end");
+            spriteCornerCable = getTexture("block/cable/corner");
+            spriteThreeCable = getTexture("block/cable/three");
+            spriteCrossCable = getTexture("block/cable/cross");
+            spriteSide = getTexture("block/cable/side");
         }
     }
 
-    public TextureAtlasSprite getTexture(ResourceLocation resource) {
-        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(resource);
+    private TextureAtlasSprite getTexture(String path) {
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(TutorialPower.MODID, path));
     }
 
     private TextureAtlasSprite getSpriteNormal(CablePatterns.SpriteIdx idx) {
@@ -105,7 +104,8 @@ public class CableBakedModel implements IDynamicBakedModel {
 
         if (side == null && (layer == null || layer.equals(RenderType.solid()))) {
             // Called with the blockstate from our block. Here we get the values of the six properties and pass that to
-            // our baked model implementation.
+            // our baked model implementation. If state == null we are called from the inventory and we use the default
+            // values for the properties
             ConnectorType north, south, west, east, up, down;
             if (state != null) {
                 north = state.getValue(CableBlock.NORTH);
@@ -128,7 +128,6 @@ public class CableBakedModel implements IDynamicBakedModel {
 
             // For each side we either cap it off if there is no similar block adjacent on that side
             // or else we extend so that we touch the adjacent block:
-
             if (up == CABLE) {
                 quads.add(quad(v(1 - o, 1, o), v(1 - o, 1, 1 - o), v(1 - o, 1 - o, 1 - o), v(1 - o, 1 - o, o), spriteCable));
                 quads.add(quad(v(o, 1, 1 - o), v(o, 1, o), v(o, 1 - o, o), v(o, 1 - o, 1 - o), spriteCable));
@@ -295,7 +294,9 @@ public class CableBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return spriteNormalCable == null ? getTexture(new ResourceLocation("minecraft", "missingno")) : spriteNormalCable;
+        return spriteNormalCable == null
+                ? Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply((new ResourceLocation("minecraft", "missingno")))
+                : spriteNormalCable;
     }
 
     @Nonnull
