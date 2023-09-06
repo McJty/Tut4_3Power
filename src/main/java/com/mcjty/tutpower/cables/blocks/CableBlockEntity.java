@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -17,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class CableBlockEntity extends BlockEntity {
 
@@ -49,11 +51,76 @@ public class CableBlockEntity extends BlockEntity {
         }
     });
 
+    // Cached outputs
+    private Set<BlockPos> outputs = null;
+
     public CableBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CABLE_BLOCK_ENTITY.get(), pos, state);
     }
 
     public void tickServer() {
+        if (energy.getEnergyStored() > 0) {
+            // Only do something if we have energy
+            checkOutputs();
+            if (!outputs.isEmpty()) {
+                // Distribute energy over all outputs
+                int amount = energy.getEnergyStored() / outputs.size();
+                for (BlockPos p : outputs) {
+                    BlockEntity te = level.getBlockEntity(p);
+                    if (te != null) {
+                        te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
+                            if (handler.canReceive()) {
+                                int received = handler.receiveEnergy(amount, false);
+                                energy.extractEnergy(received, false);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkOutputs() {
+        if (outputs == null) {
+            outputs = new HashSet<>();
+            traverse(worldPosition, cable -> {
+                // Check for all energy receivers around this position (ignore cables)
+                for (Direction direction : Direction.values()) {
+                    BlockPos p = cable.getBlockPos().relative(direction);
+                    BlockEntity te = level.getBlockEntity(p);
+                    if (te != null && !(te instanceof CableBlockEntity)) {
+                        te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
+                            if (handler.canReceive()) {
+                                outputs.add(p);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    public void markDirty() {
+        System.out.println("CableBlockEntity.markDirty");
+        traverse(worldPosition, cable -> cable.outputs = null);
+    }
+
+    private void traverse(BlockPos pos, Consumer<CableBlockEntity> consumer) {
+        Set<BlockPos> traversed = new HashSet<>();
+        traversed.add(pos);
+        traverse(pos, traversed, consumer);
+    }
+
+    private void traverse(BlockPos pos, Set<BlockPos> traversed, Consumer<CableBlockEntity> consumer) {
+        for (Direction direction : Direction.values()) {
+            BlockPos p = pos.relative(direction);
+            if (!traversed.contains(p)) {
+                traversed.add(p);
+                if (level.getBlockEntity(p) instanceof CableBlockEntity cable) {
+                    cable.traverse(p, traversed, consumer);
+                }
+            }
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.mcjty.tutpower.cables.blocks;
 
+import com.mcjty.tutpower.blocks.ChargerBlockEntity;
 import com.mcjty.tutpower.cables.ConnectorType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,9 +11,12 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -30,7 +34,7 @@ import javax.annotation.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class CableBlock extends Block implements SimpleWaterloggedBlock {
+public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityBlock {
 
     // Properties that indicate if there is the same block in a certain direction.
     public static final EnumProperty<ConnectorType> NORTH = EnumProperty.<ConnectorType>create("north", ConnectorType.class);
@@ -64,6 +68,26 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock {
         );
         makeShapes();
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new CableBlockEntity(blockPos, blockState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide) {
+            return null;
+        } else {
+            return (lvl, pos, st, be) -> {
+                if (be instanceof CableBlockEntity cable) {
+                    cable.tickServer();
+                }
+            };
+        }
     }
 
     private int calculateShapeIndex(ConnectorType north, ConnectorType south, ConnectorType west, ConnectorType east, ConnectorType up, ConnectorType down) {
@@ -129,43 +153,22 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
-        originalOnBlockPlacedBy(world, pos, state, placer, stack);
-        if (!world.isClientSide) {
-//            createCableSegment(world, pos, stack);
-        }
-        BlockState blockState = calculateState(world, pos, state);
-        if (state != blockState) {
-            world.setBlockAndUpdate(pos, blockState);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CableBlockEntity cable) {
+            cable.markDirty();
         }
     }
-
-    protected void originalOnBlockPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, placer, stack);
-    }
-
-//    public void createCableSegment(Level world, BlockPos pos, ItemStack stack) {
-//        XNetBlobData blobData = XNetBlobData.get(world);
-//        WorldBlob worldBlob = blobData.getWorldBlob(world);
-//        CableColor color = world.getBlockState(pos).getValue(COLOR);
-//        worldBlob.createCableSegment(pos, new ColorId(color.ordinal()+1));
-//        blobData.save();
-//    }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-        if (newState.getBlock() != state.getBlock() && !(newState.getBlock() instanceof CableBlock)) {
-            unlinkBlock(world, pos);
+    public void setPlacedBy(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CableBlockEntity cable) {
+            cable.markDirty();
         }
-        super.onRemove(state, world, pos, newState, isMoving);
-    }
-
-    public void unlinkBlock(Level world, BlockPos pos) {
-        if (!world.isClientSide) {
-//            XNetBlobData blobData = XNetBlobData.get(world);
-//            WorldBlob worldBlob = blobData.getWorldBlob(world);
-//            worldBlob.removeCableSegment(pos);
-//            blobData.save();
+        BlockState blockState = calculateState(level, pos, state);
+        if (state != blockState) {
+            level.setBlockAndUpdate(pos, blockState);
         }
     }
 
