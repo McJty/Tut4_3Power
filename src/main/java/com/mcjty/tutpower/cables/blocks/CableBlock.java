@@ -196,7 +196,7 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     }
 
     @Nonnull
-    public BlockState calculateState(LevelAccessor world, BlockPos pos, BlockState state) {
+    private BlockState calculateState(LevelAccessor world, BlockPos pos, BlockState state) {
         ConnectorType north = getConnectorType(world, pos, Direction.NORTH);
         ConnectorType south = getConnectorType(world, pos, Direction.SOUTH);
         ConnectorType west = getConnectorType(world, pos, Direction.WEST);
@@ -219,6 +219,7 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
+    // Return the connector type for the given position and facing direction
     private ConnectorType getConnectorType(BlockGetter world, BlockPos connectorPos, Direction facing) {
         BlockPos pos = connectorPos.relative(facing);
         BlockState state = world.getBlockState(pos);
@@ -232,6 +233,8 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         }
     }
 
+    // Return true if the block at the given position is connectable to a cable. This is the
+    // case if the block supports forge energy
     public static boolean isConnectable(BlockGetter world, BlockPos connectorPos, Direction facing) {
         BlockPos pos = connectorPos.relative(facing);
         BlockState state = world.getBlockState(pos);
