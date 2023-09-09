@@ -101,7 +101,6 @@ public class CableBlockEntity extends BlockEntity {
     }
 
     public void markDirty() {
-        System.out.println("CableBlockEntity.markDirty");
         traverse(worldPosition, cable -> cable.outputs = null);
     }
 
