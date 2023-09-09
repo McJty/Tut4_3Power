@@ -1,6 +1,5 @@
 package com.mcjty.tutpower.cables.blocks;
 
-import com.mcjty.tutpower.blocks.ChargerBlockEntity;
 import com.mcjty.tutpower.cables.ConnectorType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
