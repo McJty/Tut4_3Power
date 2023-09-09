@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tutorial",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/copper"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "iii",
+    "rrr",
+    "iii"
+  ],
+  "result": {
+    "item": "tutpower:cable"
+  },
+  "show_notification": true
+}

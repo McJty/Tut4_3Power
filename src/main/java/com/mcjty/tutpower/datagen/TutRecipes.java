@@ -44,5 +44,16 @@ public class TutRecipes extends RecipeProvider {
                 .unlockedBy("has_iron", InventoryChangeTrigger.TriggerInstance.hasItems(
                         ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
                 .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CABLE_BLOCK.get())
+                .pattern("iii")
+                .pattern("rrr")
+                .pattern("iii")
+                .define('i', Tags.Items.INGOTS_COPPER)
+                .define('r', Tags.Items.DUSTS_REDSTONE)
+                .group("tutorial")
+                .unlockedBy("has_iron", InventoryChangeTrigger.TriggerInstance.hasItems(
+                        ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
+                .save(consumer);
     }
 }
