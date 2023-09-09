@@ -108,6 +108,7 @@ public class CableBlockEntity extends BlockEntity {
     private void traverse(BlockPos pos, Consumer<CableBlockEntity> consumer) {
         Set<BlockPos> traversed = new HashSet<>();
         traversed.add(pos);
+        consumer.accept(this);
         traverse(pos, traversed, consumer);
     }
 
@@ -117,6 +118,7 @@ public class CableBlockEntity extends BlockEntity {
             if (!traversed.contains(p)) {
                 traversed.add(p);
                 if (level.getBlockEntity(p) instanceof CableBlockEntity cable) {
+                    consumer.accept(cable);
                     cable.traverse(p, traversed, consumer);
                 }
             }

@@ -133,7 +133,7 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
         if (connectorType == ConnectorType.CABLE) {
             return Shapes.join(shape, cableShape, BooleanOp.OR);
         } else if (connectorType == ConnectorType.BLOCK) {
-            return Shapes.join(shape, blockShape, BooleanOp.OR);
+            return Shapes.join(shape, Shapes.join(blockShape, cableShape, BooleanOp.OR), BooleanOp.OR);
         } else {
             return shape;
         }
