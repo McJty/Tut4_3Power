@@ -5,13 +5,13 @@ import com.mcjty.tutpower.cables.ConnectorType;
 import com.mcjty.tutpower.cables.blocks.CableBlock;
 import com.mcjty.tutpower.cables.client.CablePatterns.Pattern;
 import com.mcjty.tutpower.cables.client.CablePatterns.QuadSetting;
-import com.mcjty.tutpower.tools.BakedModelHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -34,6 +34,8 @@ import static com.mcjty.tutpower.tools.BakedModelHelper.quad;
 import static com.mcjty.tutpower.tools.BakedModelHelper.v;
 
 public class CableBakedModel implements IDynamicBakedModel {
+
+    private final boolean facade;
 
     private TextureAtlasSprite spriteConnector;
     private TextureAtlasSprite spriteNoneCable;
@@ -61,6 +63,10 @@ public class CableBakedModel implements IDynamicBakedModel {
         CablePatterns.PATTERNS.put(Pattern.of(true, false, true, true), QuadSetting.of(SPRITE_THREE, 2));
         CablePatterns.PATTERNS.put(Pattern.of(true, true, false, true), QuadSetting.of(SPRITE_THREE, 3));
         CablePatterns.PATTERNS.put(Pattern.of(true, true, true, true), QuadSetting.of(SPRITE_CROSS, 0));
+    }
+
+    public CableBakedModel(boolean facade) {
+        this.facade = facade;
     }
 
     private void initTextures() {
@@ -100,8 +106,8 @@ public class CableBakedModel implements IDynamicBakedModel {
     @Override
     @NotNull
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType layer) {
+        initTextures();
         List<BakedQuad> quads = new ArrayList<>();
-
         if (side == null && (layer == null || layer.equals(RenderType.solid()))) {
             // Called with the blockstate from our block. Here we get the values of the six properties and pass that to
             // our baked model implementation. If state == null we are called from the inventory and we use the default
@@ -115,10 +121,19 @@ public class CableBakedModel implements IDynamicBakedModel {
                 up = state.getValue(CableBlock.UP);
                 down = state.getValue(CableBlock.DOWN);
             } else {
+                // If we are a facade and we are an item then we render as the 'side' texture as a full block
+                if (facade) {
+                    quads.add(quad(v(0, 1, 1), v(1, 1, 1), v(1, 1, 0), v(0, 1, 0), spriteSide));
+                    quads.add(quad(v(0, 0, 0), v(1, 0, 0), v(1, 0, 1), v(0, 0, 1), spriteSide));
+                    quads.add(quad(v(1, 0, 0), v(1, 1, 0), v(1, 1, 1), v(1, 0, 1), spriteSide));
+                    quads.add(quad(v(0, 0, 1), v(0, 1, 1), v(0, 1, 0), v(0, 0, 0), spriteSide));
+                    quads.add(quad(v(0, 1, 0), v(1, 1, 0), v(1, 0, 0), v(0, 0, 0), spriteSide));
+                    quads.add(quad(v(0, 0, 1), v(1, 0, 1), v(1, 1, 1), v(0, 1, 1), spriteSide));
+                    return quads;
+                }
                 north = south = west = east = up = down = NONE;
             }
 
-            initTextures();
             TextureAtlasSprite spriteCable = spriteNormalCable;
             Function<CablePatterns.SpriteIdx, TextureAtlasSprite> spriteGetter = this::getSpriteNormal;
 
@@ -264,6 +279,18 @@ public class CableBakedModel implements IDynamicBakedModel {
             } else {
                 QuadSetting pattern = CablePatterns.findPattern(west, down, east, up);
                 quads.add(quad(v(o, o, 1 - o), v(1 - o, o, 1 - o), v(1 - o, 1 - o, 1 - o), v(o, 1 - o, 1 - o), spriteGetter.apply(pattern.sprite()), pattern.rotation()));
+            }
+        }
+
+        BlockState facadeId = extraData.get(CableBlock.FACADEID);
+        if (facadeId != null) {
+            BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(facadeId);
+            ChunkRenderTypeSet renderTypes = model.getRenderTypes(facadeId, rand, extraData);
+            if (layer == null || renderTypes.contains(layer)) { // always render in the null layer or the block-breaking textures don't show up
+                try {
+                    quads.addAll(model.getQuads(state, side, rand, ModelData.EMPTY, layer));
+                } catch (Exception ignored) {
+                }
             }
         }
 

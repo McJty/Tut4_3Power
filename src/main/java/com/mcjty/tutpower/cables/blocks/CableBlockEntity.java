@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -53,6 +54,10 @@ public class CableBlockEntity extends BlockEntity {
 
     // Cached outputs
     private Set<BlockPos> outputs = null;
+
+    protected CableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
     public CableBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CABLE_BLOCK_ENTITY.get(), pos, state);

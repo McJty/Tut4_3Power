@@ -1,5 +1,5 @@
 {
   "parent": "minecraft:block/cube",
-  "facade": false,
+  "facade": true,
   "loader": "tutpower:cableloader"
 }

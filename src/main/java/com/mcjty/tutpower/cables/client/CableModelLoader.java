@@ -29,14 +29,21 @@ public class CableModelLoader implements IGeometryLoader<CableModelLoader.CableM
 
     @Override
     public CableModelGeometry read(JsonObject jsonObject, JsonDeserializationContext deserializationContext) throws JsonParseException {
-        return new CableModelGeometry();
+        boolean facade = jsonObject.has("facade") && jsonObject.get("facade").getAsBoolean();
+        return new CableModelGeometry(facade);
     }
 
     public static class CableModelGeometry implements IUnbakedGeometry<CableModelGeometry> {
 
+        private final boolean facade;
+
+        public CableModelGeometry(boolean facade) {
+            this.facade = facade;
+        }
+
         @Override
         public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
-            return new CableBakedModel();
+            return new CableBakedModel(facade);
         }
     }
 }

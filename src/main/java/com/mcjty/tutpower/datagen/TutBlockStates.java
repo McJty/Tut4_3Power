@@ -1,5 +1,6 @@
 package com.mcjty.tutpower.datagen;
 
+import com.google.gson.JsonObject;
 import com.mcjty.tutpower.Registration;
 import com.mcjty.tutpower.TutorialPower;
 import com.mcjty.tutpower.cables.client.CableModelLoader;
@@ -29,15 +30,25 @@ public class TutBlockStates extends BlockStateProvider {
         registerGenerator();
         registerCharger();
         registerCable();
+        registerFacade();
     }
 
     private void registerCable() {
         BlockModelBuilder model = models().getBuilder("cable")
                 .parent(models().getExistingFile(mcLoc("cube")))
-                .customLoader((builder, helper) -> new CustomLoaderBuilder<BlockModelBuilder>(CableModelLoader.GENERATOR_LOADER, builder, helper) { })
+                .customLoader((builder, helper) -> new CableLoaderBuilder(CableModelLoader.GENERATOR_LOADER, builder, helper, false))
                 .end();
         simpleBlock(Registration.CABLE_BLOCK.get(), model);
     }
+
+    private void registerFacade() {
+        BlockModelBuilder model = models().getBuilder("facade")
+                .parent(models().getExistingFile(mcLoc("cube")))
+                .customLoader((builder, helper) -> new CableLoaderBuilder(CableModelLoader.GENERATOR_LOADER, builder, helper, true))
+                .end();
+        simpleBlock(Registration.FACADE_BLOCK.get(), model);
+    }
+
     private void registerCharger() {
         BlockModelBuilder modelOn = models().slab(Registration.CHARGER_BLOCK.getId().getPath()+"_on", SIDE, BOTTOM, modLoc("block/charger_block_on")).texture("particle", SIDE);
         BlockModelBuilder modelOff = models().slab(Registration.CHARGER_BLOCK.getId().getPath()+"_off", SIDE, BOTTOM, modLoc("block/charger_block")).texture("particle", SIDE);
@@ -75,6 +86,24 @@ public class TutBlockStates extends BlockStateProvider {
             case SOUTH -> builder.rotationY(180);
             case WEST -> builder.rotationY(270);
             case EAST -> builder.rotationY(90);
+        }
+    }
+
+    public static class CableLoaderBuilder extends CustomLoaderBuilder<BlockModelBuilder> {
+
+        private final boolean facade;
+
+        public CableLoaderBuilder(ResourceLocation loader, BlockModelBuilder parent, ExistingFileHelper existingFileHelper,
+                                  boolean facade) {
+            super(loader, parent, existingFileHelper);
+            this.facade = facade;
+        }
+
+        @Override
+        public JsonObject toJson(JsonObject json) {
+            JsonObject obj = super.toJson(json);
+            obj.addProperty("facade", facade);
+            return obj;
         }
     }
 }

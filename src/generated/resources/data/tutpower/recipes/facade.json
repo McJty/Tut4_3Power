@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tutorial",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/copper"
+    },
+    "w": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "iwi",
+    "wiw",
+    "iwi"
+  ],
+  "result": {
+    "item": "tutpower:facade"
+  },
+  "show_notification": true
+}

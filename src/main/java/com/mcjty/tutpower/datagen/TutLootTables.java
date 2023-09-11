@@ -30,6 +30,7 @@ public class TutLootTables extends VanillaBlockLoot {
         createStandardTable(Registration.GENERATOR_BLOCK.get(), Registration.GENERATOR_BLOCK_ENTITY.get(), GeneratorBlockEntity.ITEMS_TAG, GeneratorBlockEntity.ENERGY_TAG);
         createStandardTable(Registration.CHARGER_BLOCK.get(), Registration.CHARGER_BLOCK_ENTITY.get(), ChargerBlockEntity.ENERGY_TAG);
         dropSelf(Registration.CABLE_BLOCK.get());
+        dropSelf(Registration.FACADE_BLOCK.get());
     }
 
     @Override

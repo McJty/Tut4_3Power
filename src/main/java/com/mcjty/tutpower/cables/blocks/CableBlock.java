@@ -26,6 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.ScheduledTick;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.Nonnull;
@@ -42,6 +43,8 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     public static final EnumProperty<ConnectorType> EAST = EnumProperty.<ConnectorType>create("east", ConnectorType.class);
     public static final EnumProperty<ConnectorType> UP = EnumProperty.<ConnectorType>create("up", ConnectorType.class);
     public static final EnumProperty<ConnectorType> DOWN = EnumProperty.<ConnectorType>create("down", ConnectorType.class);
+
+    public static final ModelProperty<BlockState> FACADEID = new ModelProperty<>();
 
     private static VoxelShape[] shapeCache = null;
 
@@ -196,7 +199,7 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     }
 
     @Nonnull
-    private BlockState calculateState(LevelAccessor world, BlockPos pos, BlockState state) {
+    public static BlockState calculateState(LevelAccessor world, BlockPos pos, BlockState state) {
         ConnectorType north = getConnectorType(world, pos, Direction.NORTH);
         ConnectorType south = getConnectorType(world, pos, Direction.SOUTH);
         ConnectorType west = getConnectorType(world, pos, Direction.WEST);
@@ -220,7 +223,7 @@ public class CableBlock extends Block implements SimpleWaterloggedBlock, EntityB
     }
 
     // Return the connector type for the given position and facing direction
-    private ConnectorType getConnectorType(BlockGetter world, BlockPos connectorPos, Direction facing) {
+    private static ConnectorType getConnectorType(BlockGetter world, BlockPos connectorPos, Direction facing) {
         BlockPos pos = connectorPos.relative(facing);
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();

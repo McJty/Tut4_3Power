@@ -1,8 +1,7 @@
 package com.mcjty.tutpower;
 
 import com.mcjty.tutpower.blocks.*;
-import com.mcjty.tutpower.cables.blocks.CableBlock;
-import com.mcjty.tutpower.cables.blocks.CableBlockEntity;
+import com.mcjty.tutpower.cables.blocks.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
@@ -40,6 +39,11 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<CableBlockEntity>> CABLE_BLOCK_ENTITY = BLOCK_ENTITIES.register("cable",
             () -> BlockEntityType.Builder.of(CableBlockEntity::new, CABLE_BLOCK.get()).build(null));
 
+    public static final RegistryObject<FacadeBlock> FACADE_BLOCK = BLOCKS.register("facade", FacadeBlock::new);
+    public static final RegistryObject<Item> FACADE_BLOCK_ITEM = ITEMS.register("facade", () -> new FacadeBlockItem(FACADE_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<FacadeBlockEntity>> FACADE_BLOCK_ENTITY = BLOCK_ENTITIES.register("facade",
+            () -> BlockEntityType.Builder.of(FacadeBlockEntity::new, FACADE_BLOCK.get()).build(null));
+
     public static RegistryObject<CreativeModeTab> TAB = TABS.register("tutpower", () -> CreativeModeTab.builder()
             .title(Component.translatable("tab.tutpower"))
             .icon(() -> new ItemStack(GENERATOR_BLOCK.get()))
@@ -48,6 +52,7 @@ public class Registration {
                 output.accept(GENERATOR_BLOCK.get());
                 output.accept(CHARGER_BLOCK.get());
                 output.accept(CABLE_BLOCK.get());
+                output.accept(FACADE_BLOCK.get());
             })
             .build());
 
