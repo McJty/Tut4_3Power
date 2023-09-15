@@ -4,6 +4,8 @@ import com.mcjty.tutpower.Registration;
 import com.mcjty.tutpower.TutorialPower;
 import com.mcjty.tutpower.blocks.ChargerBlockEntity;
 import com.mcjty.tutpower.blocks.GeneratorBlockEntity;
+import com.mcjty.tutpower.cables.blocks.CableBlockEntity;
+import com.mcjty.tutpower.cables.blocks.FacadeBlockEntity;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -29,8 +31,8 @@ public class TutLootTables extends VanillaBlockLoot {
     protected void generate() {
         createStandardTable(Registration.GENERATOR_BLOCK.get(), Registration.GENERATOR_BLOCK_ENTITY.get(), GeneratorBlockEntity.ITEMS_TAG, GeneratorBlockEntity.ENERGY_TAG);
         createStandardTable(Registration.CHARGER_BLOCK.get(), Registration.CHARGER_BLOCK_ENTITY.get(), ChargerBlockEntity.ENERGY_TAG);
-        dropSelf(Registration.CABLE_BLOCK.get());
-        dropSelf(Registration.FACADE_BLOCK.get());
+        createStandardTable(Registration.CABLE_BLOCK.get(), Registration.CABLE_BLOCK_ENTITY.get(), CableBlockEntity.ENERGY_TAG);
+        createStandardTable(Registration.FACADE_BLOCK.get(), Registration.FACADE_BLOCK_ENTITY.get(), FacadeBlockEntity.MIMIC_TAG);
     }
 
     @Override
