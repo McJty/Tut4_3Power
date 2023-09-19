@@ -88,6 +88,7 @@ public class CableBakedModel implements IDynamicBakedModel {
         }
     }
 
+    // All textures are baked on a big texture atlas. This function gets the texture from that atlas
     private TextureAtlasSprite getTexture(String path) {
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(new ResourceLocation(TutorialPower.MODID, path));
     }
@@ -288,6 +289,8 @@ public class CableBakedModel implements IDynamicBakedModel {
             }
         }
 
+        // Render the facade if we have one in addition to the cable above. Note that the facade comes from the model data property
+        // (FACADEID)
         BlockState facadeId = extraData.get(CableBlock.FACADEID);
         if (facadeId != null) {
             BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(facadeId);
@@ -318,6 +321,7 @@ public class CableBakedModel implements IDynamicBakedModel {
         return false;
     }
 
+    // Because we can potentially mimic other blocks we need to render on all render types
     @Override
     @Nonnull
     public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
