@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -35,6 +36,7 @@ import static com.mcjty.tutpower.tools.BakedModelHelper.v;
 
 public class CableBakedModel implements IDynamicBakedModel {
 
+    private final IGeometryBakingContext context;
     private final boolean facade;
 
     private TextureAtlasSprite spriteConnector;
@@ -65,7 +67,8 @@ public class CableBakedModel implements IDynamicBakedModel {
         CablePatterns.PATTERNS.put(Pattern.of(true, true, true, true), QuadSetting.of(SPRITE_CROSS, 0));
     }
 
-    public CableBakedModel(boolean facade) {
+    public CableBakedModel(IGeometryBakingContext context, boolean facade) {
+        this.context = context;
         this.facade = facade;
     }
 
@@ -329,7 +332,7 @@ public class CableBakedModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public ItemTransforms getTransforms() {
-        return ItemTransforms.NO_TRANSFORMS;
+        return context.getTransforms();
     }
 
     @Nonnull

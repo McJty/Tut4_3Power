@@ -34,11 +34,6 @@ public class FacadeBlockItem extends BlockItem {
 
     public static final String FACADE_IS_MIMICING = "tutorial.facade.is_mimicing";
 
-    private static boolean isMimicking(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("mimic");
-    }
-
     private static String getMimickingString(ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
@@ -145,8 +140,9 @@ public class FacadeBlockItem extends BlockItem {
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
         if (stack.hasTag()) {
-            BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), stack.getTag().getCompound("mimic"));
-            tooltip.add(Component.translatable(FACADE_IS_MIMICING, state.getBlock().getDescriptionId()));
+//            BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), stack.getTag().getCompound("mimic"));
+//            tooltip.add(Component.translatable(FACADE_IS_MIMICING, state.getBlock().getDescriptionId()));
+            tooltip.add(Component.translatable(FACADE_IS_MIMICING, getMimickingString(stack)));
         }
     }
 }
