@@ -49,6 +49,9 @@ public class CableBakedModel implements IDynamicBakedModel {
     private TextureAtlasSprite spriteSide;
 
     static {
+        // For all possible patterns we define the sprite to use and the rotation. Note that each
+        // pattern looks at the existance of a cable section for each of the four directions
+        // excluding the one we are looking at.
         CablePatterns.PATTERNS.put(Pattern.of(false, false, false, false), QuadSetting.of(SPRITE_NONE, 0));
         CablePatterns.PATTERNS.put(Pattern.of(true, false, false, false), QuadSetting.of(SPRITE_END, 3));
         CablePatterns.PATTERNS.put(Pattern.of(false, true, false, false), QuadSetting.of(SPRITE_END, 0));
