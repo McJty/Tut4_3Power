@@ -28,6 +28,9 @@ public class FacadeBlockEntity extends CableBlockEntity {
         super(Registration.FACADE_BLOCK_ENTITY.get(), pos, state);
     }
 
+    // The default onDataPacket() will call load() to load the data from the packet.
+    // In addition to that we send a block update to the client
+    // and also request a model data update (for the cable baked model)
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
         super.onDataPacket(net, packet);
@@ -38,6 +41,10 @@ public class FacadeBlockEntity extends CableBlockEntity {
         }
     }
 
+    // getUpdatePacket() is called on the server when a block is placed or updated.
+    // It should return a packet containing all information needed to render this block on the client.
+    // In our case this is the block mimic information. On the client side onDataPacket() is called
+    // with this packet.
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -46,6 +53,10 @@ public class FacadeBlockEntity extends CableBlockEntity {
         return ClientboundBlockEntityDataPacket.create(this, (BlockEntity entity) -> {return nbtTag;});
     }
 
+    // getUpdateTag() is called on the server on initial load of the chunk. It will cause
+    // the packet to be sent to the client and handleUpdateTag() will be called on the client.
+    // The default implementation of handleUpdateTag() will call load() to load the data from the packet.
+    // In our case this is sufficient
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
@@ -58,6 +69,7 @@ public class FacadeBlockEntity extends CableBlockEntity {
         return mimicBlock;
     }
 
+    // This is used to build the model data for the cable baked model.
     @Nonnull
     @Override
     public ModelData getModelData() {

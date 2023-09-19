@@ -140,8 +140,6 @@ public class FacadeBlockItem extends BlockItem {
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level level, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
         if (stack.hasTag()) {
-//            BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), stack.getTag().getCompound("mimic"));
-//            tooltip.add(Component.translatable(FACADE_IS_MIMICING, state.getBlock().getDescriptionId()));
             tooltip.add(Component.translatable(FACADE_IS_MIMICING, getMimickingString(stack)));
         }
     }
