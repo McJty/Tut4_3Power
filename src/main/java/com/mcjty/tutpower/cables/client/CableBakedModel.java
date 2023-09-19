@@ -332,6 +332,8 @@ public class CableBakedModel implements IDynamicBakedModel {
                 : spriteNormalCable;
     }
 
+    // To let our cable/facade render correctly as an item (both in inventory and on the ground) we
+    // get the correct transforms from the context
     @Nonnull
     @Override
     public ItemTransforms getTransforms() {
