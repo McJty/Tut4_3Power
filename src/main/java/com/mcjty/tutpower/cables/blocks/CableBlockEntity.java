@@ -85,6 +85,9 @@ public class CableBlockEntity extends BlockEntity {
         }
     }
 
+    // This function will cache all outputs for this cable network. It will do this
+    // by traversing all cables connected to this cable and then check for all energy
+    // receivers around those cables.
     private void checkOutputs() {
         if (outputs == null) {
             outputs = new HashSet<>();
@@ -109,6 +112,8 @@ public class CableBlockEntity extends BlockEntity {
         traverse(worldPosition, cable -> cable.outputs = null);
     }
 
+    // This is a generic function that will traverse all cables connected to this cable
+    // and call the given consumer for each cable.
     private void traverse(BlockPos pos, Consumer<CableBlockEntity> consumer) {
         Set<BlockPos> traversed = new HashSet<>();
         traversed.add(pos);
