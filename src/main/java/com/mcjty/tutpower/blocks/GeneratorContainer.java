@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 import static com.mcjty.tutpower.blocks.GeneratorBlockEntity.SLOT;
 import static com.mcjty.tutpower.blocks.GeneratorBlockEntity.SLOT_COUNT;

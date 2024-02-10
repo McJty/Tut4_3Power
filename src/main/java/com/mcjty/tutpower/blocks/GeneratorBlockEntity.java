@@ -10,18 +10,15 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class GeneratorBlockEntity extends BlockEntity {
 
@@ -36,10 +33,10 @@ public class GeneratorBlockEntity extends BlockEntity {
     public static int SLOT = 0;
 
     private final ItemStackHandler items = createItemHandler();
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> items);
+    private final Lazy<IItemHandler> itemHandler = Lazy.of(() -> items);
 
     private final EnergyStorage energy = createEnergyStorage();
-    private final LazyOptional<IEnergyStorage> energyHandler = LazyOptional.of(() -> new AdaptedEnergyStorage(energy) {
+    private final Lazy<IEnergyStorage> energyHandler = Lazy.of(() -> new AdaptedEnergyStorage(energy) {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             return 0;
@@ -81,7 +78,7 @@ public class GeneratorBlockEntity extends BlockEntity {
                     // No fuel
                     return;
                 }
-                setBurnTime(ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING));
+                setBurnTime(CommonHooks.getBurnTime(fuel, RecipeType.SMELTING));
                 if (burnTime <= 0) {
                     // Not a fuel
                     return;
@@ -112,17 +109,13 @@ public class GeneratorBlockEntity extends BlockEntity {
             if (energy.getEnergyStored() <= 0) {
                 return;
             }
-            BlockEntity be = level.getBlockEntity(getBlockPos().relative(direction));
-            if (be != null) {
-                be.getCapability(ForgeCapabilities.ENERGY).map(e -> {
-                    if (e.canReceive()) {
-                        int received = e.receiveEnergy(Math.min(energy.getEnergyStored(), MAXTRANSFER), false);
-                        energy.extractEnergy(received, false);
-                        setChanged();
-                        return received;
-                    }
-                    return 0;
-                });
+            IEnergyStorage energy = level.getCapability(Capabilities.EnergyStorage.BLOCK, getBlockPos().relative(direction), null);
+            if (energy != null) {
+                if (energy.canReceive()) {
+                    int received = energy.receiveEnergy(Math.min(this.energy.getEnergyStored(), MAXTRANSFER), false);
+                    this.energy.extractEnergy(received, false);
+                    setChanged();
+                }
             }
         }
     }
@@ -168,15 +161,11 @@ public class GeneratorBlockEntity extends BlockEntity {
         return new EnergyStorage(CAPACITY, MAXTRANSFER, MAXTRANSFER);
     }
 
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        } else if (cap == ForgeCapabilities.ENERGY) {
-            return energyHandler.cast();
-        } else {
-            return super.getCapability(cap, side);
-        }
+    public IItemHandler getItemHandler() {
+        return itemHandler.get();
+    }
+
+    public IEnergyStorage getEnergyHandler() {
+        return energyHandler.get();
     }
 }

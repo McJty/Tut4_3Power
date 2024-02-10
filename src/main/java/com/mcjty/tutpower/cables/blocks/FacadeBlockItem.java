@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ public class FacadeBlockItem extends BlockItem {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
             CompoundTag mimic = tag.getCompound("mimic");
-            Block value = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(mimic.getString("Name")));
+            Block value = BuiltInRegistries.BLOCK.get(new ResourceLocation(mimic.getString("Name")));
             if (value != null) {
                 ItemStack s = new ItemStack(value, 1);
                 s.getItem();

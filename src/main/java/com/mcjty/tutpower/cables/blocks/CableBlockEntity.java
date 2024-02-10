@@ -8,15 +8,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -29,7 +26,7 @@ public class CableBlockEntity extends BlockEntity {
     public static final int CAPACITY = 1000;
 
     private final EnergyStorage energy = createEnergyStorage();
-    private final LazyOptional<IEnergyStorage> energyHandler = LazyOptional.of(() -> new AdaptedEnergyStorage(energy) {
+    private final Lazy<IEnergyStorage> energyHandler = Lazy.of(() -> new AdaptedEnergyStorage(energy) {
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
             return 0;
@@ -71,14 +68,12 @@ public class CableBlockEntity extends BlockEntity {
                 // Distribute energy over all outputs
                 int amount = energy.getEnergyStored() / outputs.size();
                 for (BlockPos p : outputs) {
-                    BlockEntity te = level.getBlockEntity(p);
-                    if (te != null) {
-                        te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
-                            if (handler.canReceive()) {
-                                int received = handler.receiveEnergy(amount, false);
-                                energy.extractEnergy(received, false);
-                            }
-                        });
+                    IEnergyStorage handler = level.getCapability(Capabilities.EnergyStorage.BLOCK, p, null);
+                    if (handler != null) {
+                        if (handler.canReceive()) {
+                            int received = handler.receiveEnergy(amount, false);
+                            energy.extractEnergy(received, false);
+                        }
                     }
                 }
             }
@@ -97,11 +92,12 @@ public class CableBlockEntity extends BlockEntity {
                     BlockPos p = cable.getBlockPos().relative(direction);
                     BlockEntity te = level.getBlockEntity(p);
                     if (te != null && !(te instanceof CableBlockEntity)) {
-                        te.getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> {
+                        IEnergyStorage handler = level.getCapability(Capabilities.EnergyStorage.BLOCK, p, null);
+                        if (handler != null) {
                             if (handler.canReceive()) {
                                 outputs.add(p);
                             }
-                        });
+                        }
                     }
                 }
             });
@@ -153,13 +149,7 @@ public class CableBlockEntity extends BlockEntity {
         return new EnergyStorage(CAPACITY, MAXTRANSFER, MAXTRANSFER);
     }
 
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return energyHandler.cast();
-        } else {
-            return super.getCapability(cap, side);
-        }
+    public IEnergyStorage getEnergyHandler() {
+        return energyHandler.get();
     }
 }

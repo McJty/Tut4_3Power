@@ -3,10 +3,9 @@ package com.mcjty.tutpower.datagen;
 import com.mcjty.tutpower.Registration;
 import com.mcjty.tutpower.TutorialPower;
 import com.mcjty.tutpower.blocks.GeneratorBlock;
-import com.mcjty.tutpower.cables.blocks.FacadeBlock;
 import com.mcjty.tutpower.cables.blocks.FacadeBlockItem;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class TutLanguageProvider extends LanguageProvider {
 
